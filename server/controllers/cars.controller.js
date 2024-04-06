@@ -13,7 +13,7 @@ module.exports.getAllCars = async (req, res) => {
 module.exports.getCar = async (req, res) => {
     const car = await Car.findById(req.params.id)
     if (!car) {
-        res.status(404).send("Book not found");
+        res.status(404).send("Car not found");
     }
     res.json(car).status(200);
 }
