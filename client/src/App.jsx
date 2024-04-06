@@ -1,54 +1,43 @@
-import './App.css'
+import './css/App.css'
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import { initialCars } from './utils';
+import { initialCars } from './utils/utils';
 import { useState, useEffect } from 'react';
+import carService from './utils/carService';
 
-import Home from './Home';
-import CarList from './CarList';
-import CarItem from './CarItem';
-import CarDetails from './CarDetails';
-import CarAddForm from './CarAddForm';
-import CarEditForm from './CarEditForm';
-
-
-const getInitialData = () => {
-  const data = JSON.parse(localStorage.getItem('MY_CAR_LIST'));
-  if (!data) return [];
-  return data;
-};
+import Home from './components/Home';
+import CarList from './components/CarList';
+import CarItem from './components/CarItem';
+import CarDetails from './components/CarDetails';
+import CarAddForm from './components/CarAddForm';
+import CarEditForm from './components/CarEditForm';
 
 
 export default function App() {
-  const [cars, setCars] = useState(getInitialData);
+  const [cars, setCars] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem('MY_CAR_LIST', JSON.stringify(cars));
-  }, [cars]);
+    const fetchCars = async () => {
+      const fetchedCars = await carService.getAllCars();
+      setCars(fetchedCars);
+    }
+    fetchCars();
+  }, []);
 
-  const removeCar = (id) => {
+  const removeCar = async (id) => {
+    await carService.deleteCar(id);
     setCars(prevCars => prevCars.filter(car => car.id !== id));
   };
 
-  const addCar = (car) => {
-    setCars(prevCars => {
-      return [
-        ...prevCars,
-        {id:crypto.randomUUID(), make: car.make, model: car.model, year: car.year, price: car.price, image: car.image}
-      ];
-    });
+  const addCar = async (car) => {
+    const newCar = await carService.addCar(car);
+    setCars(prevCars => [...prevCars, newCar]);
   }
 
-  const updateCar = (id, newCar) => {
+  const updateCar = async (id, newCar) => {
+    await carService.updateCar(id, newCar);
     setCars(prevCars => {
-      return prevCars.map(car => {
-        if (car.id === id) {
-          return {id, ...newCar};
-        }
-        else {
-          return car;
-        }
-      })
-    })
+      prevCars.map((car) => (car.id === id ? {...car, ...newCar} : car));
+    });
   } 
   
   const sortCars = () => {
@@ -64,6 +53,9 @@ export default function App() {
   }
 
   const deleteSelected = (selectedCars) => {
+    selectedCars.forEach(async (id) => {
+      await carService.deleteCar(id);
+    });
     setCars(prevCars => prevCars.filter(car => !selectedCars.includes(car.id)));
   }
 
