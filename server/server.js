@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
+const cors = require('cors');
 
 const app = express();
 const carRoutes = require('./routes/carRoutes.js');
@@ -20,6 +20,7 @@ db.once('open', () => {
     console.log('Database connected');
 });
 
+app.use(cors());
 
 app.use('/cars', carRoutes);
 
