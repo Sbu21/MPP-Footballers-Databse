@@ -4,16 +4,18 @@ import "../css/CarAddForm.css";
 
 export default function CarEditForm({cars, updateCar}) {
     const { id } = useParams();
-    const car = cars.find(car => car.id === id);
     const navigateTo = useNavigate();
-    if (car !== undefined) {
-        const [formData, setFormData] = useState({
+
+    const car = cars.find(car => car._id === id);
+
+    const [formData, setFormData] = useState({
         make: car.make,
         model: car.model,
         year: car.year,
         price: car.price,
         image: car.image
     });
+
     const handleChange = (event) => {
         const changedField = event.target.name;
         const newValue = event.target.value;
@@ -25,15 +27,15 @@ export default function CarEditForm({cars, updateCar}) {
         });
     }
 
-    const handleSubmit = () => {
-        console.log(formData);
-        updateCar(car.id, formData);
-        navigateTo(`/cars/details/${car.id}`);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await updateCar(car._id, formData);
+        navigateTo(`/cars/details/${car._id}`);
     }
 
     return (
         <>
-        <form className="CarAddForm">
+        <form className="CarAddForm" onSubmit={handleSubmit}>
             <label htmlFor="make">Make</label>
             <input type="text" placeholder="make" value={formData.make} onChange={handleChange} name="make" />
             <label htmlFor="model">Model</label>
@@ -44,14 +46,10 @@ export default function CarEditForm({cars, updateCar}) {
             <input type="text" placeholder="price" value={formData.price} onChange={handleChange} name="price" />
             <label htmlFor="image">Image URL</label>
             <input type="text" placeholder="image" value={formData.image} onChange={handleChange} name="image" />
-            <button onClick={handleSubmit}>Submit</button>
+            <button type="submit">Submit</button>
         </form>
-        <a href={`/cars/details/${car.id}`}>Go Back</a>
-        </>
-        
-    );
-    }
-    else {
-        return <h1>The car you're looking for doesn't exist</h1>
-    }
+        <a href={`/cars/details/${car._id}`}>Go Back</a>
+        </> 
+    );    
 }
+   

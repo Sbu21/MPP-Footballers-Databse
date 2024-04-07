@@ -8,7 +8,7 @@ export default function CarAddForm({cars, addCar}) {
         make: "",
         model: "",
         year: "",
-        price: "",
+        price: 0,
         image: ""
     });
 
@@ -23,15 +23,15 @@ export default function CarAddForm({cars, addCar}) {
         });
     }
 
-    const handleSubmit = () => {
-        console.log(formData);
-        addCar(formData);
-        navigateTo("/cars")
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await addCar(formData);
+        navigateTo("/cars");
     }
 
     return (
         <>
-        <form className="CarAddForm">
+        <form className="CarAddForm" onSubmit={handleSubmit}>
             <label htmlFor="make">Make</label>
             <input type="text" placeholder="make" value={formData.make} onChange={handleChange} name="make" />
             <label htmlFor="model">Model</label>
@@ -42,7 +42,7 @@ export default function CarAddForm({cars, addCar}) {
             <input type="text" placeholder="price" value={formData.price} onChange={handleChange} name="price" />
             <label htmlFor="image">Image URL</label>
             <input type="text" placeholder="image" value={formData.image} onChange={handleChange} name="image" />
-            <button onClick={handleSubmit}>Submit</button>
+            <button type="submit">Submit</button>
         </form>
         <a href="/cars">Go Back</a>
         </>

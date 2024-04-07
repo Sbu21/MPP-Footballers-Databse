@@ -23,12 +23,8 @@ export default function App() {
     fetchCars();
   }, []);
 
-  const removeCar = async (id) => {
-    await carService.deleteCar(id);
-    setCars(prevCars => prevCars.filter(car => car.id !== id));
-  };
-
   const addCar = async (car) => {
+    console.log(car);
     const newCar = await carService.addCar(car);
     setCars(prevCars => [...prevCars, newCar]);
   }
@@ -36,9 +32,14 @@ export default function App() {
   const updateCar = async (id, newCar) => {
     await carService.updateCar(id, newCar);
     setCars(prevCars => {
-      prevCars.map((car) => (car.id === id ? {...car, ...newCar} : car));
+      prevCars.map((car) => (car._id === id ? {...car, ...newCar} : car));
     });
   } 
+
+  const removeCar = async (id) => {
+    await carService.deleteCar(id);
+    setCars(prevCars => prevCars.filter(car => car._id !== id));
+  };
   
   const sortCars = () => {
     const sortedCars = [...cars];
@@ -56,7 +57,7 @@ export default function App() {
     selectedCars.forEach(async (id) => {
       await carService.deleteCar(id);
     });
-    setCars(prevCars => prevCars.filter(car => !selectedCars.includes(car.id)));
+    setCars(prevCars => prevCars.filter(car => !selectedCars.includes(car._id)));
   }
 
   return (

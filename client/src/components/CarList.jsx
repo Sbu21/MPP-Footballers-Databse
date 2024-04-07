@@ -33,10 +33,10 @@ export default function CarList({cars, sortCars, deleteSelected}) {
             
             <ul className="CarList">
                 {cars.map((car) => (
-                <li key={car.id} className="CarList-Item">
+                <li key={car._id} className="CarList-Item">
                    <CarItem car={car}/>
-                    <a href={`/cars/details/${car.id}`}>Details</a>
-                    <input type="checkbox" className={isShowing ? "ShowCheckbox" : "HideCheckbox"} checked={selectedCars.includes(car.id)} onChange={() => handleCheck(car.id)}/> 
+                    <a href={`/cars/details/${car._id}`}>Details</a>
+                    <input type="checkbox" className={isShowing ? "ShowCheckbox" : "HideCheckbox"} checked={selectedCars.includes(car._id)} onChange={() => handleCheck(car._id)}/> 
                 </li>
                 ))}
                 <li key="last-1" className="CarList-Item-Last"></li>

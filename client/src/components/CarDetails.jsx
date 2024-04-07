@@ -1,13 +1,24 @@
 import "../css/CarDetails.css";
+import carService from "../utils/carService";
 import { useParams, useNavigate} from 'react-router-dom';
+import { useState, useEffect } from "react";
 
 export default function CarDetails({cars, removeCar}) {
     const { id } = useParams();
     const navigateTo = useNavigate();
-    const car = cars.find(car => car.id === id);
+    //const car = cars.find(car => car._id === id);
+    const [car, setCar] = useState(undefined);
+
+    useEffect(() => {
+        const fetchCar = async () => {
+            const fetchedCar = await carService.getCarById(id);
+            setCar(fetchedCar);
+        }
+        fetchCar();
+    }, []);
 
     const remove = () => {
-        removeCar(car.id);
+        removeCar(car._id);
         navigateTo('/cars');
     }
 
@@ -19,10 +30,9 @@ export default function CarDetails({cars, removeCar}) {
                     <p>Manufacturer: {car.make}</p>
                     <p>Model: {car.model}</p>
                     <p>Year: {car.year}</p>
-                    <p>Price: {car.price.toString()}€</p>
-                    <span className="Buttons"><button className="Delete-Button" onClick={remove}>Delete</button> <button onClick={() => navigateTo(`/cars/edit/${car.id}`)} className="Edit-Button">Edit</button></span>
-                </div> 
-                
+                    <p>Price: {car.price}€</p>
+                    <span className="Buttons"><button className="Delete-Button" onClick={remove}>Delete</button> <button onClick={() => navigateTo(`/cars/edit/${car._id}`)} className="Edit-Button">Edit</button></span>
+                </div>  
             }
             <a className="Back-Link" href="/cars">Go Back</a>
         </div>
