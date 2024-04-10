@@ -5,9 +5,14 @@ const cors = require('cors');
 const app = express();
 const carRoutes = require('./routes/carRoutes.js');
 
-mongoose.connect('mongodb://127.0.0.1:27017/cars')
+const dbUrl = 'mongodb://127.0.0.1:27017/cars';
+const dbTestUrl = 'mongodb://127.0.0.1:27017/cars-test';
+
+const url = process.env.NODE_ENV === 'test' ? dbTestUrl : dbUrl;
+
+mongoose.connect(url)
 .then(() => {
-    console.log('Mongo connection open');
+    console.log(`Mongo connection open ${url}`);
 })
 .catch(err => {
     console.log('Mongo connection ERROR');
@@ -35,3 +40,4 @@ app.listen(8800, () => {
     console.log("Listening on port 8800");
 });
 
+module.exports = app;

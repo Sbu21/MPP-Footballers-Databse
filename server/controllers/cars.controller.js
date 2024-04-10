@@ -11,11 +11,16 @@ module.exports.getAllCars = async (req, res) => {
 }
 
 module.exports.getCar = async (req, res) => {
-    const car = await Car.findById(req.params.id)
-    if (!car) {
+    try {
+         const car = await Car.findById(req.params.id)
+        if (!car) {
+            res.status(404).send("Car not found");
+        }
+        res.json(car).status(200);
+    } catch (err) {
         res.status(404).send("Car not found");
     }
-    res.json(car).status(200);
+   
 }
 
 module.exports.createCar = async (req, res) => {
@@ -42,9 +47,12 @@ module.exports.updateCar = async (req, res) => {
 module.exports.deleteCar = async (req, res) => {
     try {
         const {id} = req.params;
-        await Car.findByIdAndDelete(id);
+        const deletedCar = await Car.findByIdAndDelete(id);
+        if (!deletedCar) {
+            res.status(404).send("Car not found");   
+        }
         res.status(204).send();
     } catch (err) {
-        res.status(404).send("Car not found")
+        res.status(404).send("Car not found");
     } 
 }

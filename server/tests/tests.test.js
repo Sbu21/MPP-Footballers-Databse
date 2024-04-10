@@ -5,8 +5,6 @@ const Car = require('../models/car');
 
 beforeAll(async () => {
   await mongoose.connect('mongodb://127.0.0.1:27017/cars-test', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
   });
 });
 
@@ -19,7 +17,7 @@ beforeEach(async () => {
 });
 
 describe('GET /cars', () => {
-  it('should get all cars', async () => {
+  test('should get all cars', async () => {
     await Car.create({
       make: 'Toyota',
       model: 'Corolla',
@@ -36,7 +34,7 @@ describe('GET /cars', () => {
 });
 
 describe('GET /cars/:id', () => {
-  it('should get a car by id', async () => {
+  test('should get a car by id', async () => {
     const car = await Car.create({
       make: 'Toyota',
       model: 'Corolla',
@@ -52,16 +50,16 @@ describe('GET /cars/:id', () => {
     expect(response.body.model).toBe('Corolla');
   });
 
-  it('should return 404 if car id is not found', async () => {
+  test('should return 404 if car id is not found', async () => {
     const response = await request(app).get('/cars/invalid_id');
 
     expect(response.status).toBe(404);
-    expect(response.text).toBe('Book not found');
+    expect(response.text).toBe('Car not found');
   });
 });
 
 describe('POST /cars', () => {
-  it('should create a new car', async () => {
+  test('should create a new car', async () => {
     const newCar = {
       make: 'Honda',
       model: 'Accord',
@@ -78,7 +76,7 @@ describe('POST /cars', () => {
 });
 
 describe('PUT /cars/:id', () => {
-  it('should update a car by id', async () => {
+  test('should update a car by id', async () => {
     const car = await Car.create({
       make: 'Toyota',
       model: 'Corolla',
@@ -103,7 +101,7 @@ describe('PUT /cars/:id', () => {
     expect(response.body.model).toBe('Camry');
   });
 
-  it('should return 404 if car id is not found', async () => {
+  test('should return 404 if car id is not found', async () => {
     const response = await request(app).put('/cars/invalid_id').send({});
 
     expect(response.status).toBe(404);
@@ -112,7 +110,7 @@ describe('PUT /cars/:id', () => {
 });
 
 describe('DELETE /cars/:id', () => {
-  it('should delete a car by id', async () => {
+  test('should delete a car by id', async () => {
     const car = await Car.create({
       make: 'Toyota',
       model: 'Corolla',
@@ -129,7 +127,7 @@ describe('DELETE /cars/:id', () => {
     expect(deletedCar).toBeNull();
   });
 
-  it('should return 404 if car id is not found', async () => {
+  test('should return 404 if car id is not found', async () => {
     const response = await request(app).delete('/cars/invalid_id');
 
     expect(response.status).toBe(404);

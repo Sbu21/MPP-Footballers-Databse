@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import { initialCars } from './utils/utils';
 import { useState, useEffect } from 'react';
 import carService from './utils/carService';
+import axios from 'axios';
 
 import Home from './components/Home';
 import CarList from './components/CarList';
@@ -11,6 +12,22 @@ import CarDetails from './components/CarDetails';
 import CarAddForm from './components/CarAddForm';
 import CarEditForm from './components/CarEditForm';
 
+
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    if (error.code === 'ERR_NETWORK') {
+      console.log('Network error, retrying...');
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      return axios(error.config);
+    } else {
+      console.error('Error:', error);
+      return Promise.reject(error);
+    }
+  }
+);
 
 export default function App() {
   const [cars, setCars] = useState([]);
