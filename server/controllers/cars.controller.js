@@ -19,8 +19,7 @@ module.exports.getCar = async (req, res) => {
         res.json(car).status(200);
     } catch (err) {
         res.status(404).send("Car not found");
-    }
-   
+    }  
 }
 
 module.exports.createCar = async (req, res) => {

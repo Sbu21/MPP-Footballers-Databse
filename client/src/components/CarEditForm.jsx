@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../css/CarAddForm.css";
+import useCarStore from "../utils/carStore";
 
 export default function CarEditForm({cars, updateCar}) {
     const { id } = useParams();
     const navigateTo = useNavigate();
 
     const car = cars.find(car => car._id === id);
+    //const car = useCarStore(state => state.cars.find(car => car._id === id));
 
     const [formData, setFormData] = useState({
         make: car.make,

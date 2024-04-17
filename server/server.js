@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const app = express();
 const carRoutes = require('./routes/carRoutes.js');
+const serviceRecordRoutes = require('./routes/serviceRecordRoutes.js');
 
 const dbUrl = 'mongodb://127.0.0.1:27017/cars';
 const dbTestUrl = 'mongodb://127.0.0.1:27017/cars-test';
@@ -30,6 +31,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/cars', carRoutes);
+app.use('/cars/:id/serviceRecords',serviceRecordRoutes);
 
 app.get('/', (req, res) => {
     res.status(200);

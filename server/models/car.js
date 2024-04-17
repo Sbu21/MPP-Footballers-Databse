@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const ServiceRecord = require('./serviceRecord');
 const Schema = mongoose.Schema;
 
 const carSchema = new Schema({
@@ -6,7 +7,23 @@ const carSchema = new Schema({
     model: String,
     year: String,
     price: Number,
-    image: String
+    image: String,
+    serviceRecords: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'ServiceRecord'
+        }
+    ]
+});
+
+carSchema.post('findOneAndDelete', async function (document) {
+    if (document) {
+        await ServiceRecord.deleteMany({
+            _id: {
+                $in: document.serviceRecords
+            }
+        }); 
+    }
 });
 
 module.exports = mongoose.model('Car', carSchema);

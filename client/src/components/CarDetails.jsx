@@ -2,17 +2,20 @@ import "../css/CarDetails.css";
 import carService from "../utils/carService";
 import { useParams, useNavigate} from 'react-router-dom';
 import { useState, useEffect } from "react";
+import useCarStore from "../utils/carStore";
 
 export default function CarDetails({cars, removeCar}) {
     const { id } = useParams();
     const navigateTo = useNavigate();
     //const car = cars.find(car => car._id === id);
     const [car, setCar] = useState(undefined);
+    //const car = useCarStore(state => state.cars.find(car => car._id === id));
+    
 
     useEffect(() => {
         const fetchCar = async () => {
-            const fetchedCar = await carService.getCarById(id);
-            setCar(fetchedCar);
+           const car = await carService.getCarById(id);
+           setCar(car);
         }
         fetchCar();
     }, []);

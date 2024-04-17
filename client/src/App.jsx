@@ -4,6 +4,7 @@ import { initialCars } from './utils/utils';
 import { useState, useEffect } from 'react';
 import carService from './utils/carService';
 import axios from 'axios';
+import useCarStore from './utils/carStore';
 
 import Home from './components/Home';
 import CarList from './components/CarList';
@@ -20,17 +21,22 @@ axios.interceptors.response.use(
   async (error) => {
     if (error.code === 'ERR_NETWORK') {
       console.log('Network error, retrying...');
+      console.log(error);
+      alert(error.message);
       await new Promise(resolve => setTimeout(resolve, 3000));
       return axios(error.config);
     } else {
       console.error('Error:', error);
+      alert(error.message);
       return Promise.reject(error);
     }
   }
 );
 
 export default function App() {
-  const [cars, setCars] = useState([]);
+  //const [cars, setCars] = useState([]);
+  const cars = useCarStore(state => state.cars); 
+  //const setCars = useCarStore(state => state.setCars);
 
   useEffect(() => {
     const fetchCars = async () => {
