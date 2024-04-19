@@ -28,14 +28,23 @@ export default function CarDetails({cars, removeCar}) {
     return (
         <div className="CarDetails">
             {car === undefined ? <h1>The car you're looking for doesn't exist</h1> :
-                <div className="Car">
-                    <img src={car.image} alt="Car Image" />
-                    <p>Manufacturer: {car.make}</p>
-                    <p>Model: {car.model}</p>
-                    <p>Year: {car.year}</p>
-                    <p>Price: {car.price}€</p>
-                    <span className="Buttons"><button className="Delete-Button" onClick={remove}>Delete</button> <button onClick={() => navigateTo(`/cars/edit/${car._id}`)} className="Edit-Button">Edit</button></span>
-                </div>  
+                <div>
+                    <div className="Car">
+                        <img src={car.image} alt="Car Image" />
+                        <p>Manufacturer: {car.make}</p>
+                        <p>Model: {car.model}</p>
+                        <p>Year: {car.year}</p>
+                        <p>Price: {car.price}€</p>
+                        <span className="Buttons"><button className="Delete-Button" onClick={remove}>Delete</button> <button onClick={() => navigateTo(`/cars/edit/${car._id}`)} className="Edit-Button">Edit</button></span>
+                    </div>
+                    <div className="ServiceRecords">
+                        <ul>
+                        {car.serviceRecords.map(serviceRecord => {
+                            <li>{serviceRecord}</li>    
+                        })} 
+                        </ul> 
+                    </div> 
+                </div>
             }
             <a className="Back-Link" href="/cars">Go Back</a>
         </div>

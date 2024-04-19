@@ -6,7 +6,7 @@ module.exports.getAllServiceRecordsForCar = async (req, res) => {
         const {id} = req.params;
         const car = await Car.findById(id).populate('serviceRecords');
         if (!car) {
-            return res.status(404).json({ error: "Car not found" });
+            return res.status(404).json({ error: "Service record not found" });
         }
         res.status(200).json(car.serviceRecords);
     } catch (error) {

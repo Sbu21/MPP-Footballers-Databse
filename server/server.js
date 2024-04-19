@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const ExpressError = require('./utils/ExpressError.js');
 
 const app = express();
 const carRoutes = require('./routes/carRoutes.js');
@@ -37,6 +38,17 @@ app.get('/', (req, res) => {
     res.status(200);
 });
 
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page not found', 404));
+});
+
+app.use((err, req, res, next) => {
+    const {statusCode = 500} = err;
+    if (!err.message) {
+        err.message = 'Something went wrong';
+    }
+    res.status(statusCode).json('Error');
+})
 
 app.listen(8800, () => {
     console.log("Listening on port 8800");

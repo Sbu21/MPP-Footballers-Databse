@@ -34,8 +34,8 @@ axios.interceptors.response.use(
 );
 
 export default function App() {
-  //const [cars, setCars] = useState([]);
-  const cars = useCarStore(state => state.cars); 
+  const [cars, setCars] = useState([]);
+  //const cars = useCarStore(state => state.cars); 
   //const setCars = useCarStore(state => state.setCars);
 
   useEffect(() => {
