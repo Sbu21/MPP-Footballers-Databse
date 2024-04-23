@@ -3,9 +3,9 @@ import axios from "axios";
 const BASE_URL = 'http://localhost:8800/cars';
 
 const carService = {
-    getAllCars: async () => {
+    getAllCars: async (currentPage, limit) => {
         try {
-            const response = await axios.get(BASE_URL);
+            const response = await axios.get(`${BASE_URL}?page=${currentPage}&limit=${limit}`);
             return response.data;
         } catch (error) {
             throw error;

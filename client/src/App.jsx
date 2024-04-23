@@ -51,12 +51,16 @@ export default function App() {
   const [backendDown, setBackendDown] = useState(true);
   //const cars = useCarStore(state => state.cars); 
   //const setCars = useCarStore(state => state.setCars);
+  
+  //infinite scroll
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const fetchedCars = await carService.getAllCars();
-        setCars(fetchedCars);
+        const fetchedCars = await carService.getAllCars(currentPage, itemsPerPage);
+        setCars([...cars, ...fetchedCars]);
         setBackendDown(false);
       } catch(error) {
         console.error('Error fetching cars', error);
@@ -66,8 +70,25 @@ export default function App() {
       }
     }
     fetchCars();
-  }, []);
+  }, [currentPage]);
 
+  const handleScroll = () => {
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    if (scrollY + windowHeight >= documentHeight - 100) {
+      setCurrentPage(currentPage + 1);
+    }
+  }
+  
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [currentPage]);
+
+  //
   useEffect(() => {
     const syncData = async () => {
       const databaseExists = await Dexie.exists('offlineDB');

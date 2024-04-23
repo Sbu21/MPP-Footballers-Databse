@@ -1,12 +1,24 @@
 const Car = require('../models/car');
 
 module.exports.getAllCars = async (req, res) => {
+    // added for infinite scroll
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 9; 
+    const offset = (page - 1) * limit;
     try {
-        const cars = await Car.find({});
+        const cars = await Car.find().skip(offset).limit(limit);
         res.status(200).json(cars);
-    } catch (err) {
-        res.status(404).send("Failed to get cars");
-    }   
+    } catch(error) {
+        console.error(error);
+        res.status(500).send('Failed to get cars');
+    }
+    //
+    // try {
+    //     const cars = await Car.find({});
+    //     res.status(200).json(cars);
+    // } catch (err) {
+    //     res.status(404).send("Failed to get cars");
+    // }   
 }
 
 module.exports.getCar = async (req, res) => {
