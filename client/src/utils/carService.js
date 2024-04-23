@@ -8,7 +8,6 @@ const carService = {
             const response = await axios.get(BASE_URL);
             return response.data;
         } catch (error) {
-            console.error('Error fetching cars', error);
             throw error;
         }       
     },
@@ -17,7 +16,6 @@ const carService = {
             const response = await axios.get(`${BASE_URL}/${id}`);
             return response.data;
           } catch (error) {
-            console.error('Error fetching car by id:', error);
             throw error;
           }
     },
@@ -26,8 +24,6 @@ const carService = {
             const response = await axios.post(BASE_URL, carData);
             return response.data;
           } catch (error) {
-            console.error('Error adding car:', error);
-            useCarStore.getState().addCar(carData);
             throw error;
         }
     },
@@ -36,7 +32,6 @@ const carService = {
             const response = await axios.put(`${BASE_URL}/${id}`, carData);
             return response.data;
           } catch (error) {
-            console.error('Error updating car:', error);
             throw error;
           }
     },
@@ -44,7 +39,6 @@ const carService = {
         try {
             await axios.delete(`${BASE_URL}/${id}`);
         } catch (error) {
-            console.error('Error deleting car:', error);
             throw error;
         }
     }

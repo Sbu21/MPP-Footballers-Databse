@@ -8,6 +8,7 @@ export default function CarItem({car}) {
             <p>{car.make}</p>
             <p><span>{car.model}</span> <span>{car.year}</span></p>
             <p>Price: {car.price}€</p>
+            <p>Number of service records: {car.serviceRecords.length}</p>
         </div>
     );
 

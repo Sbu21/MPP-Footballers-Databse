@@ -18,7 +18,6 @@ module.exports.getAllServiceRecordsForCar = async (req, res) => {
 module.exports.getServiceRecordById = async (req,res) => {
     const {serviceRecordId} = req.params;
     const serviceRecord = await SerivceRecord.findById(serviceRecordId);
-    console.log(serviceRecord);
     res.status(200).json(serviceRecord);
 }
 
@@ -29,6 +28,7 @@ module.exports.createServiceRecord = async (req, res) => {
     car.serviceRecords.push(serviceRecord);
     await serviceRecord.save();
     await car.save();
+    res.status(200).json(serviceRecord);
 }
 
 module.exports.updateServiceRecord = async (req, res) => {
@@ -42,4 +42,5 @@ module.exports.deleteServiceRecord = async (req, res) => {
     const {id, serviceRecordId} = req.params;
     await Car.findByIdAndUpdate(id, {$pull: {serviceRecords: serviceRecordId}});
     await SerivceRecord.findByIdAndDelete(serviceRecordId);
+    res.status(204);
 }

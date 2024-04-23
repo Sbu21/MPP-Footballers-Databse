@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/CarAddForm.css";
 
-export default function CarAddForm({cars, addCar}) {
+export default function CarAddForm({addCar}) {
     const navigateTo = useNavigate();
     const [formData, setFormData] = useState({
         make: "",
@@ -24,9 +24,14 @@ export default function CarAddForm({cars, addCar}) {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        await addCar(formData);
-        navigateTo("/cars");
+        try {
+            e.preventDefault();
+            await addCar(formData);
+            navigateTo("/cars");
+        } catch (error) {
+            console.log(error.message);
+        }
+        
     }
 
     return (
@@ -45,7 +50,6 @@ export default function CarAddForm({cars, addCar}) {
             <button type="submit">Submit</button>
         </form>
         <a href="/cars">Go Back</a>
-        </>
-        
+        </> 
     );
 }

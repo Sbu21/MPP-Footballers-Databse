@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../css/CarAddForm.css";
-import useCarStore from "../utils/carStore";
+import useCarStore from "../store/carStore";
 
 export default function CarEditForm({cars, updateCar}) {
     const { id } = useParams();

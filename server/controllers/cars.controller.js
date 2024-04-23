@@ -3,25 +3,18 @@ const Car = require('../models/car');
 module.exports.getAllCars = async (req, res) => {
     try {
         const cars = await Car.find({});
-        if (!cars) {
-            res.status(404).send("Failed to get cars");
-        }
         res.status(200).json(cars);
     } catch (err) {
-        console.log(err);
-        res.status(500).send(err.message);
+        res.status(404).send("Failed to get cars");
     }   
 }
 
 module.exports.getCar = async (req, res) => {
     try {
-         const car = await Car.findById(req.params.id)
-        if (!car) {
-            res.status(404).send("Car not found");
-        }
+        const car = await Car.findById(req.params.id);
         res.status(200).json(car);
     } catch (err) {
-        res.status(500).send(err.message);
+        res.status(404).send("Car not found");
     }  
 }
 
@@ -42,7 +35,7 @@ module.exports.updateCar = async (req, res) => {
         await car.save();
         res.status(200).json(car);
     } catch (err) {
-        res.status(500).send(err.message);
+        res.status(404).send("Car not found");
     }
 }
 
@@ -50,11 +43,8 @@ module.exports.deleteCar = async (req, res) => {
     try {
         const {id} = req.params;
         const deletedCar = await Car.findByIdAndDelete(id);
-        if (!deletedCar) {
-            res.status(404).send("Car not found");   
-        }
         res.status(204).send();
     } catch (err) {
-        res.status(500).send(err.message);
+        res.status(404).send("Car not found");
     } 
 }

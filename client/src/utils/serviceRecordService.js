@@ -3,47 +3,42 @@ import axios from "axios";
 const BASE_URL = 'http://localhost:8800/cars/:id/serviceRecords';
 
 const serviceRecordService = {
-    getAllserviceRecordsForCar: async () => {
+    getAllserviceRecordsForCar: async (carId) => {
         try {
-            const response = await axios.get(BASE_URL);
+            const response = await axios.get(`http://localhost:8800/cars/${carId}/serviceRecords`);
             return response.data;
         } catch (error) {
-            console.error('Error fetching service records', error);
             throw error;
         }       
     },
-    getserviceRecordById: async (id) => {
+    getserviceRecordById: async (carId, id) => {
         try {
-            const response = await axios.get(`${BASE_URL}/${id}`);
+            const response = await axios.get(`http://localhost:8800/cars/${carId}/serviceRecords/${id}`);
             return response.data;
           } catch (error) {
-            console.error('Error fetching service record by id:', error);
             throw error;
           }
     },
-    addServiceRecord: async (serviceRecordData) => {
+    addServiceRecord: async (carId, serviceRecordData) => {
         try {
-            const response = await axios.post(BASE_URL, serviceRecordData);
+            const response = await axios.post(`http://localhost:8800/cars/${carId}/serviceRecords`, serviceRecordData);
             return response.data;
           } catch (error) {
-            console.error('Error adding car:', error);
             throw error;
         }
     },
-    updateServiceRecord: async (id, serviceRecordData) => {
+    updateServiceRecord: async (carId, id, serviceRecordData) => {
         try {
-            const response = await axios.put(`${BASE_URL}/${id}`, serviceRecordData);
+            const response = await axios.put(`http://localhost:8800/cars/${carId}/serviceRecords/${id}`, serviceRecordData);
             return response.data;
           } catch (error) {
-            console.error('Error updating serviceRecord:', error);
             throw error;
           }
     },
-    deleteServiceRecord: async (id) => {
+    deleteServiceRecord: async (carId, id) => {
         try {
-            await axios.delete(`${BASE_URL}/${id}`);
+            await axios.delete(`http://localhost:8800/cars/${carId}/serviceRecords/${id}`);
         } catch (error) {
-            console.error('Error deleting service record:', error);
             throw error;
         }
     }
