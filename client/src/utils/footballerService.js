@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const BASE_URL = 'http://localhost:8800/cars';
+const BASE_URL = 'http://localhost:8800/footballers';
 
-const carService = {
-    getAllCars: async (currentPage, limit) => {
+const footballerService = {
+    getAllFootballers: async (currentPage, limit) => {
         try {
             const response = await axios.get(`${BASE_URL}?page=${currentPage}&limit=${limit}`);
             return response.data;
@@ -11,7 +11,7 @@ const carService = {
             throw error;
         }       
     },
-    getCarById: async (id) => {
+    getFootballerById: async (id) => {
         try {
             const response = await axios.get(`${BASE_URL}/${id}`);
             return response.data;
@@ -19,23 +19,23 @@ const carService = {
             throw error;
           }
     },
-    addCar: async (carData) => {
+    addFootballer: async (footballerData) => {
         try {
-            const response = await axios.post(BASE_URL, carData);
+            const response = await axios.post(BASE_URL, footballerData);
             return response.data;
           } catch (error) {
             throw error;
         }
     },
-    updateCar: async (id, carData) => {
+    updateFootballer: async (id, footballerData) => {
         try {
-            const response = await axios.put(`${BASE_URL}/${id}`, carData);
+            const response = await axios.put(`${BASE_URL}/${id}`, footballerData);
             return response.data;
           } catch (error) {
             throw error;
           }
     },
-    deleteCar: async (id) => {
+    deleteFootballer: async (id) => {
         try {
             await axios.delete(`${BASE_URL}/${id}`);
         } catch (error) {
@@ -44,4 +44,4 @@ const carService = {
     }
 };
 
-export default carService;
+export default footballerService;

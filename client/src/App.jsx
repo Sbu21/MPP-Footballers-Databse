@@ -1,75 +1,52 @@
 import './css/App.css'
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import carService from './utils/carService';
-import serviceRecordService from './utils/serviceRecordService.js';
-import useCarStore from './store/carStore';
+import footballerService from './utils/footballerService.js';
+import footballersStatsService from './utils/footballersStatsService.js';
+import userService from './utils/userService.js';
+import useFootballerStore from './store/footballerStore.js';
 import axios from 'axios';
 import * as db from './db/db.js';
 import Dexie from 'dexie';
 
 import Home from './components/Home';
 
-import CarList from './components/CarList';
-import CarDetails from './components/CarDetails';
-import CarAddForm from './components/CarAddForm';
-import CarEditForm from './components/CarEditForm';
+import FootballerList from './components/FootballerList';
+import FootballerDetails from './components/FootballerDetails';
+import FootballerAddForm from './components/FootballerAddForm.jsx';
+import FootballerEditForm from './components/FootballerEditForm';
 
-import ServiceRecordAddForm from './components/ServiceRecordAddForm.jsx';
-import ServiceRecordEditForm from './components/ServiceRecordEditForm.jsx';
+import FootballerStatAddForm from './components/FootballerStatsAddForm.jsx';
+import FootballerStatEditForm from './components/FootballersStatsEditForm.jsx';
 
-// axios.interceptors.request.use(
-//   (config) => {
-//     return config;
-//   },
-//   async (error) => {
-//     if (error.code === 'ERR_NETWORK') {
-//       console.log('Request failed');
-//       alert("Request Failed");
-//       await new Promise(resolve => setTimeout(resolve, 3000));
-//       return axios(error.config);
-//     }
-//   }
-// );
-
-// axios.interceptors.response.use(
-//   async (response) => {
-//     return response;
-//   },
-//   async (error) => {
-//     if (error.code === 'ERR_NETWORK') {
-//       console.log('Network error, retrying...');
-//       console.error(error);
-//       await new Promise(resolve => setTimeout(resolve, 10000));
-//       return axios(error.config);
-//     } 
-//   }
-// );
+import UserLoginForm from './components/UserLoginForm.jsx';
+import UserRegisterForm from './components/UserRegisterForm.jsx';
+import UserProfile from './components/UserProfile.jsx';
+import VerificationPage from './components/VerificationPage.jsx';
 
 export default function App() {
-  const [cars, setCars] = useState([]);
+  const [footballers, setFootballers] = useState([]);
   const [backendDown, setBackendDown] = useState(true);
-  //const cars = useCarStore(state => state.cars); 
-  //const setCars = useCarStore(state => state.setCars);
+  const [sort, setSort] = useState('ascending');
   
   //infinite scroll
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
   useEffect(() => {
-    const fetchCars = async () => {
+    const fetchFootballers = async () => {
       try {
-        const fetchedCars = await carService.getAllCars(currentPage, itemsPerPage);
-        setCars([...cars, ...fetchedCars]);
+        const fetchedFootballers = await footballerService.getAllFootballers(currentPage, itemsPerPage);
+        setFootballers([...footballers, ...fetchedFootballers]);
         setBackendDown(false);
       } catch(error) {
-        console.error('Error fetching cars', error);
+        console.error('Error fetching footballers', error);
         if(error.code === 'ERR_NETWORK') {
           setBackendDown(true);
         }
       }
     }
-    fetchCars();
+    fetchFootballers();
   }, [currentPage]);
 
   const handleScroll = () => {
@@ -88,7 +65,6 @@ export default function App() {
     };
   }, [currentPage]);
 
-  //
   useEffect(() => {
     const syncData = async () => {
       const databaseExists = await Dexie.exists('offlineDB');
@@ -100,90 +76,116 @@ export default function App() {
     syncData();
   }, [backendDown])
 
-  const addCar = async (car) => {
+  const addFootballer = async (footballer) => {
     try {
-      const newCar = await carService.addCar(car);
-      setCars(prevCars => [...prevCars, newCar]);
+      const newFootballer = await footballerService.addFootballer(footballer);
+      setFootballers(prevFootballers => [...prevFootballers, newFootballer]);
       setBackendDown(false);
     } catch(error) {
-      console.error('Error adding car', error);
+      console.error('Error adding footballer', error);
       if(error.code === 'ERR_NETWORK') {
-        console.log('error adding car');
+        console.log('error adding footballer');
         setBackendDown(true);
-        db.saveCarLocally(car, 'POST');
+        db.saveFootballersLocally(footballer, 'POST');
       }
     }
   }
 
-  const updateCar = async (id, updatedCar) => {
+  const updateFootballer = async (id, updatedFootballer) => {
     try {
-      await carService.updateCar(id, updatedCar);
+      await footballerService.updateFootballer(id, updatedFootballer);
       setBackendDown(false);
     } catch(error) {
-      console.error('Error updating car', error);
+      console.error('Error updating footballer', error);
       if(error.code === 'ERR_NETWORK') {
-        console.log('error updating car');
+        console.log('error updating footballer');
         setBackendDown(true);
-        db.saveCarLocally({...updatedCar, _id: id}, 'PUT');
+        db.saveFootballersLocally({...updatedFootballer, _id: id}, 'PUT');
       }
     }
-    // conflict with deleteCar when done right after updateCar
-    // setCars(prevCars => {
-    //   prevCars.map((car) => (car._id === id ? {...car, ...newCar} : car));
-    // });
   } 
 
-  const removeCar = async (id) => {
+  const removeFootballer = async (id) => {
     try {
-      await carService.deleteCar(id);
-      setCars(prevCars => prevCars.filter(car => car._id !== id));
+      await footballerService.deleteFootballer(id);
+      setFootballers(prevFootballers => prevFootballers.filter(footballer => footballer._id !== id));
       setBackendDown(false);
     } catch(error) {
-      console.error('Error removing car', error);
+      console.error('Error removing footballer', error);
       setBackendDown(true);
     }
   };
   
-  const sortCars = () => {
-    const sortedCars = [...cars];
-    sortedCars.sort((a, b) => {
-        const makeA = a.make.toLowerCase();
-        const makeB = b.make.toLowerCase();
-        if (makeA < makeB) return -1;
-        if (makeA > makeB) return 1;
+  const sortFootballers = () => {
+    debugger;
+    const sortedFootballers = [...footballers];
+    sortedFootballers.sort((a, b) => {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
         return 0;
     });
-    setCars(sortedCars);
+    setFootballers(sortedFootballers);
   }
 
-  const deleteSelected = (selectedCars) => {
-    selectedCars.forEach(async (id) => {
-      await removeCar(id);
+  const deleteSelected = (selectedFootballers) => {
+    selectedFootballers.forEach(async (id) => {
+      await removeFootballer(id);
     });
-    setCars(prevCars => prevCars.filter(car => !selectedCars.includes(car._id)));
+    setFootballers(prevFootballers => prevFootballers.filter(footballer => !selectedFootballers.includes(footballer._id)));
   }
 
-  const addServiceRecord = async (carId, newServiceRecord) => {
+  const addFootballerStat = async (footballerId, newFootballerStat) => {
     try {
-      await serviceRecordService.addServiceRecord(carId, newServiceRecord);
+      await footballersStatsService.addFootballersStats(footballerId, newFootballerStat);
     } catch(error) {
-      console.error('Error adding service record', error);
+      console.error('Error adding footballer stat', error);
     }
   }
 
-  const updateServiceRecord = async (carId, id, updatedServiceRecord) => {
+  const updateFootballerStat = async (footballerId, id, updatedFootballerStat) => {
     try {
-      await serviceRecordService.updateServiceRecord(carId, id, updatedServiceRecord);
+      await footballersStatsService.updateFootballersStats(footballerId, id, updatedFootballerStat);
     } catch(error) {
-      console.error('Error adding service record', error);
+      console.error('Error adding footballer stat', error);
     }
   }
 
-  const removeServiceRecord = async (carId, id) => {
+  const removeFootballerStat = async (footballerId, id) => {
     try {
-      await serviceRecordService.deleteServiceRecord(carId, id);
+      await footballersStatsService.deleteFootballersStats(footballerId, id);
     } catch(error) {
-      console.error('Error adding service record', error);
+      console.error('Error adding footballer stat', error);
+    }
+  }
+
+  const registerUser = async (userData) => {
+    try {
+      const emailToken = await userService.registerUser(userData);
+      return emailToken;
+      //setCurrentUser(currentUser);
+    } catch(error) {
+      console.error('Error registering user', error);
+    }
+  }
+
+  const loginUser = async (userData) => {
+    try {
+      const currentUser = await userService.loginUser(userData);
+      return currentUser;
+      //setCurrentUser(currentUser);
+    } catch(error) {
+      console.error('Error logging in user', error);
+    }
+  }
+
+  const logoutUser = async () => {
+    try {
+      await userService.logoutUser();
+      //setCurrentUser(undefined);
+    } catch(error) {
+      console.error('Error logging out user', error);
     }
   }
 
@@ -191,13 +193,17 @@ export default function App() {
     <Router>
       <div className='content'>
         <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/cars' element={<CarList cars={cars} sortCars={sortCars} deleteSelected={deleteSelected}/>} />
-          <Route path='/cars/details/:id' element={<CarDetails removeCar={removeCar} removeServiceRecord={removeServiceRecord}/>}/>
-          <Route path='/cars/edit/:id' element={<CarEditForm cars={cars} updateCar={updateCar}/>}/>
-          <Route path='/cars/add' element={<CarAddForm addCar={addCar}/>}/>
-          <Route path='/cars/:id/serviceRecords/add' element={<ServiceRecordAddForm addServiceRecord={addServiceRecord}/>}/>
-          <Route path='/cars/:id/serviceRecords/edit/:serviceRecordId' element={<ServiceRecordEditForm updateServiceRecord={updateServiceRecord}/>}/>
+          <Route path='/' element={<Home logoutUser={logoutUser}/>} />
+          <Route path='/login' element={<UserLoginForm loginUser={loginUser}/>}/>
+          <Route path='/register' element={<UserRegisterForm registerUser={registerUser}/>}/>
+          <Route path='/footballers' element={<FootballerList footballers={footballers} sortFootballers={sortFootballers} deleteSelected={deleteSelected}/>} />
+          <Route path='/footballers/details/:id' element={<FootballerDetails removeFootballer={removeFootballer} removeFootballerStat={removeFootballerStat}/>}/>
+          <Route path='/footballers/edit/:id' element={<FootballerEditForm footballers={footballers} updateFootballer={updateFootballer}/>}/>
+          <Route path='/footballers/add' element={<FootballerAddForm addFootballer={addFootballer}/>}/>
+          <Route path='/footballers/:id/footballersStats/add' element={<FootballerStatAddForm addFootballerStat={addFootballerStat}/>}/>
+          <Route path='/footballers/:id/footballersStats/edit/:footballersStatsId' element={<FootballerStatEditForm updateFootballerStat={updateFootballerStat}/>}/>
+          <Route path='/users/:id' element={<UserProfile/>}/>
+          <Route path='/confirmation/:token' element={<VerificationPage/>}/>
         </Routes>
       </div>
     </Router>

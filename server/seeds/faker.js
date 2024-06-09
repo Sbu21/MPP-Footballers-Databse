@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-const Car = require('../models/car');
-const ServiceRecord = require('../models/serviceRecord');
+const Footballer = require('../models/footballer');
+const FootballerStats = require('../models/footballerStats');
 const { faker } = require('@faker-js/faker');
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/cars')
+mongoose.connect('mongodb://localhost:27017/footballers')
 .then(() => {
     console.log('Mongo connection open');
 })
@@ -21,28 +21,26 @@ db.once('open', () => {
 
 const seedDb = async () => {
     try {
-        await Car.deleteMany({});
-        await ServiceRecord.deleteMany({});
+        await Footballer.deleteMany({});
+        await FootballerStats.deleteMany({});
         for (let i = 0; i < 200; i++) { 
-            const car = new Car({
-                make: faker.vehicle.manufacturer(),
-                model: faker.vehicle.model(),
-                year: faker.number.int({ min: 1990, max: 2024 }).toString(),
-                price: faker.number.int({ min: 1000, max: 300000 }), 
-                image: 'image'
+            const footballer = new Footballer({
+                name: faker.person.firstName(),
+                age: faker.number.int({ min: 18, max: 40 }),
+                position: faker.helpers.arrayElement(['Forward', 'Midfielder', 'Defender', 'Goalkeeper'])
             });
 
             for (let j = 0; j < 50; j++) { 
-                const serviceRecord = new ServiceRecord({
-                    autoShopName: faker.company.buzzPhrase(),
-                    type: faker.helpers.arrayElement(['Oil Change', 'Tire Rotation', 'Brake Inspection', 'Repair']),
-                    date: faker.date.past(),
-                    cost: faker.number.int({ min: 100, max: 15000 }) 
+                const footballerStats = new FootballerStats({
+                    season: faker.helpers.arrayElement(['2020/2021', '2021/2022', '2022/2023', '2023/2024']),
+                    gamesPlayed: faker.number.int({ min: 0, max: 50 }),
+                    goals: faker.number.int({ min: 0, max: 50 }),
+                    assists: faker.number.int({ min: 0, max: 50 })
                 });
-                await serviceRecord.save();
-                car.serviceRecords.push(serviceRecord); 
+                await footballerStats.save();
+                footballer.footballerStats.push(footballerStats); 
             }
-            await car.save();  
+            await footballer.save();  
         }
         console.log('Database seeded successfully');
     } catch (error) {

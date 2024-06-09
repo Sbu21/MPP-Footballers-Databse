@@ -1,0 +1,85 @@
+.Footballers {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.BulkDelete {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.CSVLink {
+  text-decoration: none;
+  color: #000;
+  padding: 10px 20px;
+  background-color: #ddd;
+  border-radius: 5px;
+}
+
+.FootballerList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.FootballerList-Item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.FootballerList-Item-Last {
+  height: 10px;
+}
+
+.ShowCheckbox {
+  display: block;
+}
+
+.HideCheckbox {
+  display: none;
+}
+
+.DeleteAllShow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.DeleteAllBtn {
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.DeleteAllImg {
+  width: 20px;
+  height: 20px;
+}
+
+.Footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.AddFootballer {
+  text-decoration: none;
+  color: #000;
+  padding: 10px 20px;
+  background-color: #ddd;
+  border-radius: 5px;
+}

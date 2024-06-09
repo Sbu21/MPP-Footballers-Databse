@@ -1,0 +1,81 @@
+.FootballerDetails {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .Footballer {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .Footballer p {
+    margin: 0;
+  }
+  
+  .Buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .Delete-Button{
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .Edit-Button{
+    background-color: #4d17e0;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .Delete-Button:hover{
+    background-color: #d32f2f;
+  }
+  
+  .FootballerStats {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .FootballerStats h2 {
+    margin-top: 0;
+  }
+  
+  .Add-Button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .Add-Button:hover {
+    background-color: #388e3c;
+  }
+  
+  .Back-Link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #000;
+  }
+  
+  .Back-Link:hover {
+    text-decoration: underline;
+  }

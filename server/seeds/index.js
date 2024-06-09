@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const Car = require('../models/car');
-const ServiceRecord = require('../models/serviceRecord');
+const Footballer = require('../models/footballer');
+const FootballerStats = require('../models/footballerStats');
 
-mongoose.connect('mongodb://127.0.0.1:27017/cars')
+mongoose.connect('mongodb://localhost:27017/footballers')
 .then(() => {
     console.log('Mongo connection open');
 })
@@ -18,28 +18,26 @@ db.once('open', () => {
 });
 
 const seedDb = async () => {
-    await Car.deleteMany({});
-    await ServiceRecord.deleteMany({});
+    await Footballer.deleteMany({});
+    await FootballerStats.deleteMany({});
 
-    const serviceRecord1 = new ServiceRecord({autoShopName: "Mercedes Service", type: "oil change", date: "2017-12-22", cost: 500});
-    await serviceRecord1.save();
-    const serviceRecord2 = new ServiceRecord({autoShopName: "Mercedes Service", type: "repair", date: "2018-11-11", cost: 10000});
-    await serviceRecord2.save();
-    const serviceRecord3 = new ServiceRecord({autoShopName: "Audi Service", type: "oil change", date: "2018-10-14", cost: 450});
-    await serviceRecord3.save();
-    const serviceRecord4 = new ServiceRecord({autoShopName: "BMW Service", type: "oil change", date: "2022-06-25", cost: 500});
-    await serviceRecord4.save();
+    const footballerStats1 = new FootballerStats({gamesPlayed: 10, goals: 5, assists: 3});
+    await footballerStats1.save();
+    const footballerStats2 = new FootballerStats({gamesPlayed: 20, goals: 10, assists: 5});
+    await footballerStats2.save();
+    const footballerStats3 = new FootballerStats({gamesPlayed: 30, goals: 15, assists: 10});
+    await footballerStats3.save();
+    const footballerStats4 = new FootballerStats({gamesPlayed: 40, goals: 20, assists: 15});
+    await footballerStats4.save();
 
-    const car1 = new Car({make: "Mercedes", model: "CLA", year: "2020", price: 30000, image: "https://upload.wikimedia.org/wikipedia/commons/7/71/Mercedes-Benz_C118_IMG_2673.jpg", serviceRecords: [serviceRecord1._id, serviceRecord2._id]});
-    await car1.save();
-    const car2 = new Car({make: "Mercedes", model: "CLS", year: "2022", price: 80000, image: "https://frankfurt.apollo.olxcdn.com/v1/files/jci1a0lw66jv2-RO/image;s=1000x750"});
-    await car2.save();
-    const car3 = new Car({make: "Mercedes", model: "GLC", year: "2021", price: 50000, image: "https://www.mercedes-benz.ro/content/romania/ro/passengercars/models/suv/glc/overview/_jcr_content/root/responsivegrid/tabs/tabitem/hotspot_module/hotspot_simple_image.component.damq1.3314754749195.jpg/mercedes-benz-glc-suv-x254-exterior-hotspot-3302x1858-05-2022.jpg"});
-    await car3.save();
-    const car4 = new Car({make: "Audi", model: "A4", year: "2019", price: 20000, image: "https://t4.ftcdn.net/jpg/04/51/65/87/360_F_451658744_Bm9QLAj1D0nluOkPHDKVXKTSZ6jRBOOS.jpg", serviceRecords: [serviceRecord3._id]});
-    await car4.save();
-    const car5 = new Car({make: "BMW", model: "M4", year: "2023", price: 90000, image: "https://ireland.apollo.olxcdn.com/v1/files/eyJmbiI6Imk3dnVjcG93NWhpcDMtQVVUT1ZJVFJPIn0.-Vn6Nw9AKoccB9mU2OtHRoCswQQBglGSWp_f2lLqTAA/image;s=644x461", serviceRecords: [serviceRecord4._id]});
-    await car5.save();
+    const footballer1 = new Footballer({name: 'Cristiano Ronaldo', age: 36, position: 'Forward', footballerStats: footballerStats1});
+    await footballer1.save();
+    const footballer2 = new Footballer({name: 'Lionel Messi', age: 34, position: 'Forward', footballerStats: footballerStats2});
+    await footballer2.save();
+    const footballer3 = new Footballer({name: 'Robert Lewandowski', age: 32, position: 'Forward', footballerStats: footballerStats3});  
+    await footballer3.save();
+    const footballer4 = new Footballer({name: 'Mohamed Salah', age: 29, position: 'Forward', footballerStats: footballerStats4});
+    await footballer4.save();
 }
 
 seedDb()

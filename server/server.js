@@ -1,16 +1,25 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const ExpressError = require('./utils/ExpressError.js');
+const cookieParser = require('cookie-parser');
 
 const app = express();
-const carRoutes = require('./routes/carRoutes.js');
-const serviceRecordRoutes = require('./routes/serviceRecordRoutes.js');
+const footballerRoutes = require('./routes/footballerRoutes.js');
+const footballerStatsRoutes = require('./routes/footballerStatsRoutes.js');
+const userRoutes = require('./routes/userRoutes.js');
 
-const dbUrl = 'mongodb://127.0.0.1:27017/cars';
-const dbTestUrl = 'mongodb://127.0.0.1:27017/cars-test';
+const dbUrl = 'mongodb://localhost:27017/footballers';
+const dbTestUrl = 'mongodb://localhost:27017/footballers-test';
 
 const url = process.env.NODE_ENV === 'test' ? dbTestUrl : dbUrl;
+
+//deployment
+const dbClusterUrl = process.env.DB_URL;
 
 mongoose.connect(url)
 .then(() => {
@@ -27,12 +36,17 @@ db.once('open', () => {
     console.log('Database connected');
 });
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true 
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-app.use('/cars', carRoutes);
-app.use('/cars/:id/serviceRecords',serviceRecordRoutes);
+app.use('/footballers', footballerRoutes);
+app.use('/footballers/:id/footballersStats',footballerStatsRoutes);
+app.use('/', userRoutes);
 
 app.get('/', (req, res) => {
     res.status(200);

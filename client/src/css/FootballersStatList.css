@@ -1,9 +1,9 @@
-.ServiceRecordsList {
+.FootballersStatsList {
     list-style: none;
     text-align: left;
 }
 
-.ServiceRecordsList li {
+.FootballersStatsList li {
     margin-bottom: 25px;
     border-bottom: 1px solid grey;
 }

@@ -1,36 +1,36 @@
 import Dexie from 'dexie';
-import carService from '../utils/carService';
+import footballerService from '../utils/footballerService';
 
 export const db = new Dexie('offlineDB');
 db.version(1).stores({
-    cars: '++id, make, model, year, price, image, method, _id'
+    footballers: '++id, name, age, position, method, _id'
 });
 
-export const saveCarLocally = async (carData, method) => {
-    await db.cars.add({...carData, method});
+export const saveFootballersLocally = async (footballerData, method) => {
+    await db.footballers.add({...footballerData, method});
 }
 
 export const syncDataWithBackend = async () => {
-    const offlineCarsData = await db.cars.where('method').anyOf('POST', 'PUT').toArray();
+    const offlineFootballersData = await db.footballers.where('method').anyOf('POST', 'PUT').toArray();
 
-    for (let carData of offlineCarsData) {
-        if (carData.method === 'POST') {
-            const newCar = {make: carData.make, model: carData.model, year: carData.year, price: carData.price, image: carData.image};
+    for (let footballerData of offlineFootballersData) {
+        if (footballerData.method === 'POST') {
+            const newFootballer = {name: footballerData.name, age: footballerData.age, position: footballerData.position};
             try {
-                await carService.addCar(newCar);
+                await footballerService.addFootballer(newFootballer);
             } catch (error) {
-                console.error('Error syncing car data', error);
+                console.error('Error syncing footballer data', error);
             }
         }
-        else if (carData.method === 'PUT') {
-            const updatedCar = {make: carData.make, model: carData.model, year: carData.year, price: carData.price, image: carData.image};
+        else if (footballerData.method === 'PUT') {
+            const updatedFootballer = {name: footballerData.name, age: footballerData.age, position: footballerData.position};
             try {
-                await carService.updateCar(carData._id, updatedCar);
+                await footballerService.updateFootballer(footballerData._id, updatedFootballer);
             } catch (error) {
-                console.error('Error syncing car data', error);
+                console.error('Error syncing footballer data', error);
             }
         }
-        await db.cars.update(carData.id, {method: 'synced'});
+        await db.footballers.update(footballerData.id, {method: 'synced'});
     }
 }
 
